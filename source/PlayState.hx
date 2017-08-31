@@ -12,6 +12,8 @@ class PlayState extends FlxState
         add(player);
         FlxG.sound.playMusic('assets/music/whitenoise.ogg', 0.1);
         add(new Letter(40, 40));
+        add(new Letter(80, 200));
+        add(new Letter(100, 100));
 		super.create();
 	}
 

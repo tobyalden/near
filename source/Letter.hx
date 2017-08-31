@@ -8,12 +8,23 @@ class Letter extends FlxSprite
 {
     public static inline var SPEED = 200;
 
+    public static var alphabet = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+        'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+    ];
+
     static public var all:FlxGroup = new FlxGroup();
 
     public function new(x:Int, y:Int)
     {
         super(x, y);
-        makeGraphic(16, 16, FlxColor.RED);
+        loadGraphic('assets/images/letters.png', true, 34, 32);
+        var count = 0;
+        for(letter in alphabet) {
+            animation.add(letter, [count]);
+            count++;
+        }
+        animation.play(alphabet[Math.floor(Math.random() * alphabet.length)]);
         all.add(this);
     }
 
