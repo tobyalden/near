@@ -4,17 +4,16 @@ import flixel.*;
 import flixel.group.*;
 import flixel.util.*;
 
-class Bullet extends FlxSprite
+class Letter extends FlxSprite
 {
-    
-    public static inline var SPEED = 400;
+    public static inline var SPEED = 200;
 
     static public var all:FlxGroup = new FlxGroup();
 
     public function new(x:Int, y:Int)
     {
-        super(x - 2, y - 2);
-        makeGraphic(4, 4, FlxColor.WHITE);
+        super(x, y);
+        makeGraphic(16, 16, FlxColor.RED);
         all.add(this);
     }
 
@@ -26,7 +25,7 @@ class Bullet extends FlxSprite
 
     private function movement()
     {
-       velocity.y = -SPEED;
+
     }
 
     override public function kill()

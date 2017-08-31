@@ -27,7 +27,6 @@ class Player extends FlxSprite
 
     private function shooting()
     {
-        trace(shotCooldown.timeLeft);
         if(FlxG.keys.pressed.X && !shotCooldown.active)
         {
             shotCooldown.reset(SHOT_COOOLDOWN);
