@@ -4,16 +4,17 @@ import flixel.*;
 
 class PlayState extends FlxState
 {
+    private var dictionary:Dictionary;
     private var player:Player;
 
 	override public function create():Void
 	{
+        dictionary = new Dictionary();
         player = new Player(20, 20);
         add(player);
-        FlxG.sound.playMusic('assets/music/whitenoise.ogg', 0.1);
-        add(new Letter(40, 40));
-        add(new Letter(80, 200));
-        add(new Letter(100, 100));
+        for (i in 0...20) {
+            add(new Letter(i*50, i*25));
+        }
 		super.create();
 	}
 
