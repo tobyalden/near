@@ -33,24 +33,24 @@ class PlayState extends FlxState
     private function destroyBoth(sprite1:FlxObject, sprite2:FlxObject)
     {
         var letter:Letter = null;
-        if(
-            Type.getClassName(Type.getClass(sprite1))
-            == Type.getClassName(Letter)
-        ) {
+        if(isLetter(sprite1)) {
             letter = cast(sprite1, Letter);
         }
-        else if(
-            Type.getClassName(Type.getClass(sprite2))
-            == Type.getClassName(Letter)
-        ) {
+        else if(isLetter(sprite2)) {
             letter = cast(sprite2, Letter);
         }
         if(letter != null) {
             currentLetters.text += letter.toString();
-            trace(currentLetters.text);
         }
         sprite1.kill();
         sprite2.kill();
         return true;
+    }
+
+    private function isLetter(sprite:FlxObject) {
+        return (
+            Type.getClassName(Type.getClass(sprite))
+            == Type.getClassName(Letter)
+        );
     }
 }
