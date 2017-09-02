@@ -6,7 +6,6 @@ import flixel.util.*;
 
 class Dictionary
 {
-    
     static public inline var DICTIONARY_PATH = (
         'assets/data/dictionary.txt'
     );
@@ -33,15 +32,37 @@ class Dictionary
                 }
                 index++;
             }
+            pointer.set('isWord', true);
             try {
                 word = file.readLine();
             } catch (e:haxe.io.Eof) {
-                word = null; 
+                word = null;
             }
             count++;
         }
         file.close();
         trace('Loaded ' + count + ' words into tree.');
+    }
+
+    public function isWord(word:String, countSubstringAsWord:Bool=false)
+    {
+        try {
+            var pointer = allWords;
+            for(letter in word.split('')) {
+               pointer = pointer[letter];
+            }
+            if(pointer.get('isWord')) {
+                return true;
+            }
+        }
+        catch(e:Dynamic) {
+            return false;
+        }
+        return countSubstringAsWord;
+    }
+
+    public function isSubstring(word) {
+       return isWord(word, true);
     }
 
 }
