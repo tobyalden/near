@@ -10,14 +10,18 @@ class Player extends FlxSprite
 
     private var shotCooldown:FlxTimer;
     private var currentLetters:String;
+    private var dictionary:Dictionary;
+    private var lastWord:String;
 
-    public function new(x:Int, y:Int)
+    public function new(x:Int, y:Int, dictionary:Dictionary)
     {
         super(x, y);
+        this.dictionary = dictionary;
         makeGraphic(16, 16, FlxColor.BLUE);
         shotCooldown = new FlxTimer();
         shotCooldown.loops = 1;
         currentLetters = '';
+        lastWord = '';
     }
 
     override public function update(elapsed:Float)
@@ -35,6 +39,9 @@ class Player extends FlxSprite
             var bullet = new Bullet(Std.int(x + 8), Std.int(y + 8));
             FlxG.state.add(bullet);
         }
+        if(FlxG.keys.justPressed.Z) {
+            castWord();
+        }
     }
 
     public function addLetter(letter:String) {
@@ -43,6 +50,21 @@ class Player extends FlxSprite
 
     public function getCurrentLetters() {
         return currentLetters;
+    }
+
+    public function getLastWord() {
+        return lastWord;
+    }
+
+    public function castWord() {
+        if(dictionary.isWord(currentLetters)) {
+            trace('spelled "' + currentLetters + '"!');
+        }
+        else {
+            trace('bzzzt!');
+        }
+        lastWord = currentLetters;
+        currentLetters = '';
     }
 
     private function movement()

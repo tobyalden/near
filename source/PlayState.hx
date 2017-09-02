@@ -2,24 +2,35 @@ package;
 
 import flixel.*;
 import flixel.text.*;
+import flixel.util.*;
 
 class PlayState extends FlxState
 {
-    static public var dictionary:Dictionary;
     private var player:Player;
     private var currentLetterDisplay:FlxText;
+    private var lastWordDisplay:FlxText;
+    private var dictionary:Dictionary;
 
 	override public function create():Void
 	{
-        dictionary = new Dictionary('assets/data/dictionary_small.txt');
+        dictionary = new Dictionary('assets/data/dictionary.txt');
+
         currentLetterDisplay = new FlxText();
         currentLetterDisplay.size = 64;
         currentLetterDisplay.y = FlxG.height - currentLetterDisplay.height;
         add(currentLetterDisplay);
-        player = new Player(20, 20);
+
+        lastWordDisplay = new FlxText();
+        lastWordDisplay.size = 64;
+        //lastWordDisplay.y = FlxG.height/2 - lastWordDisplay.height/2;
+        add(lastWordDisplay);
+
+        player = new Player(20, 20, dictionary);
         add(player);
+
         for (i in 0...20) {
             add(new Letter(i*50, i*25));
+            add(new Letter(i*50, i*25 + 30));
         }
 		super.create();
 	}
@@ -28,6 +39,14 @@ class PlayState extends FlxState
 	{
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
         currentLetterDisplay.text = player.getCurrentLetters();
+        lastWordDisplay.text = player.getLastWord();
+        lastWordDisplay.x = FlxG.width/2 - lastWordDisplay.width/2;
+        if(dictionary.isWord(player.getLastWord())) {
+            lastWordDisplay.color = FlxColor.GREEN;
+        }
+        else {
+            lastWordDisplay.color = FlxColor.RED;
+        }
 		super.update(elapsed);
 	}
 
@@ -53,5 +72,5 @@ class PlayState extends FlxState
             Type.getClassName(Type.getClass(sprite))
             == Type.getClassName(Letter)
         );
-    }
+   }
 }

@@ -6,6 +6,8 @@ import flixel.util.*;
 
 class Dictionary
 {
+    static public var dictionary;
+
     private var allWords:Map<String, Dynamic>;
 
     public function new(path:String)
