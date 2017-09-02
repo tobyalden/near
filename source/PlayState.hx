@@ -6,14 +6,19 @@ import flixel.util.*;
 
 class PlayState extends FlxState
 {
+    public static inline var SPAWN_COOLDOWN = 0.25;
+
     private var player:Player;
     private var currentLetterDisplay:FlxText;
     private var lastWordDisplay:FlxText;
     private var dictionary:Dictionary;
+    private var spawnCooldown:FlxTimer;
 
 	override public function create():Void
 	{
         dictionary = new Dictionary('assets/data/dictionary.txt');
+        spawnCooldown = new FlxTimer();
+        spawnCooldown.loops = 1;
 
         currentLetterDisplay = new FlxText();
         currentLetterDisplay.size = 64;
@@ -28,17 +33,15 @@ class PlayState extends FlxState
         player = new Player(20, 20, dictionary);
         add(player);
 
-        for (i in 0...20) {
-            add(new Letter(i*50, i*25));
-            add(new Letter(i*50, i*25 + 30));
-        }
 		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
+
         currentLetterDisplay.text = player.getCurrentLetters();
+
         lastWordDisplay.text = player.getLastWord();
         lastWordDisplay.x = FlxG.width/2 - lastWordDisplay.width/2;
         if(dictionary.isWord(player.getLastWord())) {
@@ -47,11 +50,19 @@ class PlayState extends FlxState
         else {
             lastWordDisplay.color = FlxColor.RED;
         }
+
+        if(!spawnCooldown.active) {
+            spawnCooldown.reset(SPAWN_COOLDOWN);
+            var randX = Math.round(FlxG.width * Math.random());
+            var letter = new Letter(randX, -50);
+            add(letter);
+        }
 		super.update(elapsed);
 	}
 
     private function destroyBoth(sprite1:FlxObject, sprite2:FlxObject)
     {
+        //TODO: destroy, don't kill
         var letter:Letter = null;
         if(isLetter(sprite1)) {
             letter = cast(sprite1, Letter);

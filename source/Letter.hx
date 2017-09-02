@@ -39,7 +39,7 @@ class Letter extends FlxSprite
 
     private function movement()
     {
-
+        velocity.y = SPEED;
     }
 
     override public function toString()
