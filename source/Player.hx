@@ -9,6 +9,7 @@ class Player extends FlxSprite
     public static inline var SHOT_COOOLDOWN = 0.25;
 
     private var shotCooldown:FlxTimer;
+    private var currentLetters:String;
 
     public function new(x:Int, y:Int)
     {
@@ -16,6 +17,7 @@ class Player extends FlxSprite
         makeGraphic(16, 16, FlxColor.BLUE);
         shotCooldown = new FlxTimer();
         shotCooldown.loops = 1;
+        currentLetters = '';
     }
 
     override public function update(elapsed:Float)
@@ -33,6 +35,14 @@ class Player extends FlxSprite
             var bullet = new Bullet(Std.int(x + 8), Std.int(y + 8));
             FlxG.state.add(bullet);
         }
+    }
+
+    public function addLetter(letter:String) {
+        currentLetters += letter;
+    }
+
+    public function getCurrentLetters() {
+        return currentLetters;
     }
 
     private function movement()
