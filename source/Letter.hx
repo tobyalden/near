@@ -15,16 +15,19 @@ class Letter extends FlxSprite
 
     static public var all:FlxGroup = new FlxGroup();
 
+    private var myLetter:String;
+
     public function new(x:Int, y:Int)
     {
         super(x, y);
         loadGraphic('assets/images/letters.png', true, 34, 32);
         var count = 0;
+        myLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
         for(letter in alphabet) {
             animation.add(letter, [count]);
             count++;
         }
-        animation.play(alphabet[Math.floor(Math.random() * alphabet.length)]);
+        animation.play(myLetter);
         all.add(this);
     }
 
@@ -37,6 +40,11 @@ class Letter extends FlxSprite
     private function movement()
     {
 
+    }
+
+    override public function toString()
+    {
+        return myLetter;
     }
 
     override public function kill()

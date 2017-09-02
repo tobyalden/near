@@ -6,16 +6,13 @@ import flixel.util.*;
 
 class Dictionary
 {
-    static public inline var DICTIONARY_PATH = (
-        'assets/data/dictionary.txt'
-    );
     private var allWords:Map<String, Dynamic>;
 
-    public function new()
+    public function new(path:String)
     {
         allWords = new Map<String, Dynamic>();
         var count = 0;
-        var file = sys.io.File.read(DICTIONARY_PATH, false);
+        var file = sys.io.File.read(path, false);
         var word = file.readLine();
         while(word != null)
         {
