@@ -15,7 +15,7 @@ class PlayState extends FlxState
         currentLetters.size = 64;
         currentLetters.y = FlxG.height - currentLetters.height;
         add(currentLetters);
-        dictionary = new Dictionary('assets/data/dictionary.txt');
+        dictionary = new Dictionary('assets/data/dictionary_small.txt');
         player = new Player(20, 20);
         add(player);
         for (i in 0...20) {
