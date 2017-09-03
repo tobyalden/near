@@ -6,7 +6,7 @@ import flixel.util.*;
 
 class Dictionary
 {
-    static public var dictionary;
+    static public var dictionary:Dictionary;
 
     private var allWords:Map<String, Dynamic>;
 
@@ -41,6 +41,7 @@ class Dictionary
         }
         file.close();
         trace('Loaded ' + count + ' words into tree.');
+        dictionary = this;
     }
 
     public function isWord(word:String, countSubstringAsWord:Bool=false)

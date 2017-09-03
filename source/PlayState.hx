@@ -6,17 +6,16 @@ import flixel.util.*;
 
 class PlayState extends FlxState
 {
-    public static inline var SPAWN_COOLDOWN = 0.7;
+    public static inline var SPAWN_COOLDOWN = 0.5;
 
     private var player:Player;
     private var currentLetterDisplay:FlxText;
     private var lastWordDisplay:FlxText;
-    private var dictionary:Dictionary;
     private var spawnCooldown:FlxTimer;
 
 	override public function create():Void
 	{
-        dictionary = new Dictionary('assets/data/dictionary.txt');
+        new Dictionary('assets/data/dictionary.txt');
         spawnCooldown = new FlxTimer();
         spawnCooldown.loops = 1;
 
@@ -30,7 +29,7 @@ class PlayState extends FlxState
         //lastWordDisplay.y = FlxG.height/2 - lastWordDisplay.height/2;
         add(lastWordDisplay);
 
-        player = new Player(20, 20, dictionary);
+        player = new Player(20, 20);
         add(player);
 
 		super.create();
@@ -44,7 +43,7 @@ class PlayState extends FlxState
 
         lastWordDisplay.text = player.getLastWord();
         lastWordDisplay.x = FlxG.width/2 - lastWordDisplay.width/2;
-        if(dictionary.isWord(player.getLastWord())) {
+        if(Dictionary.dictionary.isWord(player.getLastWord())) {
             lastWordDisplay.color = FlxColor.GREEN;
         }
         else {
@@ -54,7 +53,7 @@ class PlayState extends FlxState
         if(!spawnCooldown.active) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
             var randX = Math.round(FlxG.width * Math.random());
-            var letter = new Letter(randX, -50);
+            var letter = new Letter(randX, -50, Letter.getRandomWeighted());
             add(letter);
         }
 		super.update(elapsed);

@@ -10,13 +10,11 @@ class Player extends FlxSprite
 
     private var shotCooldown:FlxTimer;
     private var currentLetters:String;
-    private var dictionary:Dictionary;
     private var lastWord:String;
 
-    public function new(x:Int, y:Int, dictionary:Dictionary)
+    public function new(x:Int, y:Int)
     {
         super(x, y);
-        this.dictionary = dictionary;
         makeGraphic(16, 16, FlxColor.BLUE);
         shotCooldown = new FlxTimer();
         shotCooldown.loops = 1;
@@ -57,7 +55,7 @@ class Player extends FlxSprite
     }
 
     public function castWord() {
-        if(dictionary.isWord(currentLetters)) {
+        if(Dictionary.dictionary.isWord(currentLetters)) {
             trace('spelled "' + currentLetters + '"!');
         }
         else {

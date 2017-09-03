@@ -26,12 +26,12 @@ class Letter extends FlxSprite
 
     private var myLetter:String;
 
-    public function new(x:Int, y:Int)
+    public function new(x:Int, y:Int, myLetter:String)
     {
         super(x, y);
         loadGraphic('assets/images/letters.png', true, 34, 32);
+        this.myLetter = myLetter;
         var count = 0;
-        myLetter = getRandomWeighted();
         for(letter in alphabet) {
             animation.add(letter, [count]);
             count++;
@@ -50,7 +50,8 @@ class Letter extends FlxSprite
         super.update(elapsed);
     }
 
-    private static function getRandomWeighted() {
+    public static function getRandomWeighted() {
+        // Return a random letter, weighted by frequency in English.
         var randPercent = Math.random() * 100;
         var count = 0;
         while(randPercent > 0) {
