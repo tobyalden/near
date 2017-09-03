@@ -62,7 +62,6 @@ class PlayState extends FlxState
 
     private function destroyBoth(sprite1:FlxObject, sprite2:FlxObject)
     {
-        //TODO: destroy, don't kill
         var letter:Letter = null;
         if(isLetter(sprite1)) {
             letter = cast(sprite1, Letter);
@@ -73,8 +72,8 @@ class PlayState extends FlxState
         if(letter != null) {
             player.addLetter(letter.toString());
         }
-        sprite1.kill();
-        sprite2.kill();
+        sprite1.destroy();
+        sprite2.destroy();
         return true;
     }
 

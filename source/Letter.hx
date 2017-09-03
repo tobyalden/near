@@ -47,9 +47,9 @@ class Letter extends FlxSprite
         return myLetter;
     }
 
-    override public function kill()
+    override public function destroy()
     {
         all.remove(this);
-        destroy();
+        super.destroy();
     }
 }

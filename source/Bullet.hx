@@ -29,9 +29,9 @@ class Bullet extends FlxSprite
        velocity.y = -SPEED;
     }
 
-    override public function kill()
+    override public function destroy()
     {
         all.remove(this);
-        destroy();
+        super.destroy();
     }
 }
