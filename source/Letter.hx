@@ -60,6 +60,9 @@ class Letter extends FlxSprite
         if(potentialLetters.length == 0) {
             return getRandomWeighted();
         }
+        while(potentialLetters.length < 5) {
+            potentialLetters.push(getRandomWeighted());
+        }
         return potentialLetters[
             Math.floor(Math.random() * potentialLetters.length)
         ];

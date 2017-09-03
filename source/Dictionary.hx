@@ -81,6 +81,9 @@ class Dictionary
         );
         while(letterIter.hasNext()) {
             var key = letterIter.next();
+            if(key == 'isWord') {
+                continue;
+            }
             potentialLetters.push(key);
         }
         return potentialLetters;
