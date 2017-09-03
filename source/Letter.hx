@@ -7,6 +7,7 @@ import flixel.util.*;
 class Letter extends FlxSprite
 {
     public static inline var SPEED = 80;
+    public static inline var MINIMUM_LETTER_POOL_SIZE = 5;
 
     public static var alphabet = [
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -60,7 +61,7 @@ class Letter extends FlxSprite
         if(potentialLetters.length == 0) {
             return getRandomWeighted();
         }
-        while(potentialLetters.length < 5) {
+        while(potentialLetters.length < MINIMUM_LETTER_POOL_SIZE) {
             potentialLetters.push(getRandomWeighted());
         }
         return potentialLetters[
