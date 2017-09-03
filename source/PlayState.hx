@@ -53,7 +53,10 @@ class PlayState extends FlxState
         if(!spawnCooldown.active) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
             var randX = Math.round(FlxG.width * Math.random());
-            var letter = new Letter(randX, -50, Letter.getRandomWeighted());
+            var letter = new Letter(
+                randX, -50,
+                Letter.getRandomPotential(player.getCurrentLetters())
+            );
             add(letter);
         }
 		super.update(elapsed);

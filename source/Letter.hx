@@ -6,7 +6,7 @@ import flixel.util.*;
 
 class Letter extends FlxSprite
 {
-    public static inline var SPEED = 50;
+    public static inline var SPEED = 80;
 
     public static var alphabet = [
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -48,6 +48,21 @@ class Letter extends FlxSprite
             return;
         }
         super.update(elapsed);
+    }
+
+    public static function getRandomPotential(start:String)
+    {
+        // Return a random letter chosen from all the letters
+        // in all the words starting with the given string
+        var potentialLetters = (
+            Dictionary.dictionary.getPotentialLetters(start)
+        );
+        if(potentialLetters.length == 0) {
+            return getRandomWeighted();
+        }
+        return potentialLetters[
+            Math.floor(Math.random() * potentialLetters.length)
+        ];
     }
 
     public static function getRandomWeighted() {

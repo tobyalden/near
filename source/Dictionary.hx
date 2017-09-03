@@ -65,4 +65,25 @@ class Dictionary
        return isWord(word, true);
     }
 
+    public function getPotentialLetters(start:String) {
+        // Returns a set of all the letters in all the words starting with the
+        // given string
+        var potentialLetters = [];
+        if(!isSubstring(start)) {
+            return potentialLetters;
+        }
+        var allWordsPointer = allWords;
+        for(letter in start.split('')) {
+            allWordsPointer = allWordsPointer[letter];
+        }
+        var letterIter:Iterator<String> = (
+            allWordsPointer.keys()
+        );
+        while(letterIter.hasNext()) {
+            var key = letterIter.next();
+            potentialLetters.push(key);
+        }
+        return potentialLetters;
+    }
+
 }
