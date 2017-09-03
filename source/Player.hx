@@ -56,6 +56,16 @@ class Player extends FlxSprite
         movement();
         shooting();
         super.update(elapsed);
+        y = Math.max(0, y);
+        y = Math.min(y, FlxG.height - height);
+        if(isPlayerTwo) {
+            x = Math.max(FlxG.width/2, x);
+            x = Math.min(x, FlxG.width - width);
+        }
+        else {
+            x = Math.max(0, x);
+            x = Math.min(x, FlxG.width/2 - width);
+        }
     }
 
     private function shooting()

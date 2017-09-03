@@ -6,10 +6,11 @@ import flixel.util.*;
 
 class PlayState extends FlxState
 {
-    public static inline var SPAWN_COOLDOWN = 0.5;
+    public static inline var SPAWN_COOLDOWN = 1;
 
     private var player1:Player;
     private var player2:Player;
+    private var line:FlxSprite;
     private var currentLetterDisplayP1:FlxText;
     private var lastWordDisplayP1:FlxText;
     private var currentLetterDisplayP2:FlxText;
@@ -19,6 +20,11 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
         new Dictionary('assets/data/dictionary.txt');
+
+        line = new FlxSprite(FlxG.width/2, 0);
+        line.makeGraphic(1, FlxG.height, FlxColor.WHITE);
+        add(line);
+
         spawnCooldown = new FlxTimer();
         spawnCooldown.loops = 1;
 
@@ -77,10 +83,18 @@ class PlayState extends FlxState
         // TODO: Spawn different letters on the different sides of the screen
         if(!spawnCooldown.active) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
-            var randX = Math.round(FlxG.width * Math.random());
+            var randX = Math.round((FlxG.width/2 - 35) * Math.random());
             var letter = new Letter(
                 randX, -50,
                 Letter.getRandomPotential(player1.getCurrentLetters())
+            );
+            add(letter);
+
+            var randX = Math.round((FlxG.width/2 - 35) * Math.random());
+            randX += Math.round(FlxG.width/2);
+            var letter = new Letter(
+                randX, -50,
+                Letter.getRandomPotential(player2.getCurrentLetters())
             );
             add(letter);
         }
