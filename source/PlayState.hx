@@ -8,9 +8,12 @@ class PlayState extends FlxState
 {
     public static inline var SPAWN_COOLDOWN = 0.5;
 
-    private var player:Player;
-    private var currentLetterDisplay:FlxText;
-    private var lastWordDisplay:FlxText;
+    private var player1:Player;
+    private var player2:Player;
+    private var currentLetterDisplayP1:FlxText;
+    private var lastWordDisplayP1:FlxText;
+    private var currentLetterDisplayP2:FlxText;
+    private var lastWordDisplayP2:FlxText;
     private var spawnCooldown:FlxTimer;
 
 	override public function create():Void
@@ -19,18 +22,28 @@ class PlayState extends FlxState
         spawnCooldown = new FlxTimer();
         spawnCooldown.loops = 1;
 
-        currentLetterDisplay = new FlxText();
-        currentLetterDisplay.size = 64;
-        currentLetterDisplay.y = FlxG.height - currentLetterDisplay.height;
-        add(currentLetterDisplay);
+        currentLetterDisplayP1 = new FlxText();
+        currentLetterDisplayP1.size = 64;
+        currentLetterDisplayP1.y = FlxG.height - currentLetterDisplayP1.height;
+        add(currentLetterDisplayP1);
 
-        lastWordDisplay = new FlxText();
-        lastWordDisplay.size = 64;
-        //lastWordDisplay.y = FlxG.height/2 - lastWordDisplay.height/2;
-        add(lastWordDisplay);
+        currentLetterDisplayP2 = new FlxText();
+        currentLetterDisplayP2.size = 64;
+        currentLetterDisplayP2.y = FlxG.height - currentLetterDisplayP2.height;
+        add(currentLetterDisplayP2);
 
-        player = new Player(20, 20);
-        add(player);
+        lastWordDisplayP1 = new FlxText();
+        lastWordDisplayP1.size = 64;
+        add(lastWordDisplayP1);
+
+        lastWordDisplayP2 = new FlxText();
+        lastWordDisplayP2.size = 64;
+        add(lastWordDisplayP2);
+
+        player1 = new Player(20, 20);
+        player2 = new Player(100, 100, true);
+        add(player1);
+        add(player2);
 
 		super.create();
 	}
@@ -39,23 +52,35 @@ class PlayState extends FlxState
 	{
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
 
-        currentLetterDisplay.text = player.getCurrentLetters();
+        currentLetterDisplayP1.text = player1.getCurrentLetters();
+        currentLetterDisplayP2.text = player2.getCurrentLetters();
+        currentLetterDisplayP2.x = FlxG.width - currentLetterDisplayP2.width;
 
-        lastWordDisplay.text = player.getLastWord();
-        lastWordDisplay.x = FlxG.width/2 - lastWordDisplay.width/2;
-        if(Dictionary.dictionary.isWord(player.getLastWord())) {
-            lastWordDisplay.color = FlxColor.GREEN;
+        lastWordDisplayP1.text = player1.getLastWord();
+        lastWordDisplayP1.x = 0;
+        if(Dictionary.dictionary.isWord(player1.getLastWord())) {
+            lastWordDisplayP1.color = FlxColor.GREEN;
         }
         else {
-            lastWordDisplay.color = FlxColor.RED;
+            lastWordDisplayP1.color = FlxColor.RED;
         }
 
+        lastWordDisplayP2.text = player2.getLastWord();
+        lastWordDisplayP2.x = FlxG.width - lastWordDisplayP2.width;
+        if(Dictionary.dictionary.isWord(player2.getLastWord())) {
+            lastWordDisplayP2.color = FlxColor.GREEN;
+        }
+        else {
+            lastWordDisplayP2.color = FlxColor.RED;
+        }
+
+        // TODO: Spawn different letters on the different sides of the screen
         if(!spawnCooldown.active) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
             var randX = Math.round(FlxG.width * Math.random());
             var letter = new Letter(
                 randX, -50,
-                Letter.getRandomPotential(player.getCurrentLetters())
+                Letter.getRandomPotential(player1.getCurrentLetters())
             );
             add(letter);
         }
@@ -65,14 +90,22 @@ class PlayState extends FlxState
     private function destroyBoth(sprite1:FlxObject, sprite2:FlxObject)
     {
         var letter:Letter = null;
+        var bullet:Bullet = null;
         if(isLetter(sprite1)) {
             letter = cast(sprite1, Letter);
+            bullet = cast(sprite2, Bullet);
         }
         else if(isLetter(sprite2)) {
             letter = cast(sprite2, Letter);
+            bullet = cast(sprite1, Bullet);
         }
         if(letter != null) {
-            player.addLetter(letter.toString());
+            if(bullet.wasShotByPlayerTwo()) {
+                player2.addLetter(letter.toString());
+            }
+            else {
+                player1.addLetter(letter.toString());
+            } 
         }
         sprite1.destroy();
         sprite2.destroy();
