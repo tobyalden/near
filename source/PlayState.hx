@@ -6,7 +6,7 @@ import flixel.util.*;
 
 class PlayState extends FlxState
 {
-    public static inline var SPAWN_COOLDOWN = 0.25;
+    public static inline var SPAWN_COOLDOWN = 0.7;
 
     private var player:Player;
     private var currentLetterDisplay:FlxText;

@@ -5,7 +5,7 @@ import flixel.util.*;
 
 class Player extends FlxSprite
 {
-    public static inline var SPEED = 200;
+    public static inline var SPEED = 270;
     public static inline var SHOT_COOOLDOWN = 0.25;
 
     private var shotCooldown:FlxTimer;
