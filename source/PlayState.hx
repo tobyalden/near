@@ -20,6 +20,7 @@ class PlayState extends FlxState
     private var spawnCooldown:FlxTimer;
     private var isGameOver:Bool;
     private var gameOverTimer:FlxTimer;
+    private var gameOverText:FlxText;
     private var gameOverDisplay:FlxGroup;
 
 	override public function create():Void
@@ -34,7 +35,7 @@ class PlayState extends FlxState
         spawnCooldown.loops = 1;
 
         gameOverDisplay = new FlxGroup();
-        var gameOverText = new FlxText(0, 0, 0, 'GAME OVER', 64);
+        gameOverText = new FlxText(0, 0, 0, 'GAME OVER', 64);
         gameOverText.screenCenter();
         var restartText = new FlxText(0, 0, 0, 'PRESS START FOR REMATCH', 16);
         restartText.screenCenter();
@@ -131,6 +132,14 @@ class PlayState extends FlxState
 
     private function killPlayer(player:FlxObject, _:FlxObject) {
         player.kill();
+        var _player = cast(player, Player);
+        if(cast(player, Player).isPlayerTwo) {
+           gameOverText.text = 'P1 WINS';
+        }
+        else {
+           gameOverText.text = 'P2 WINS';
+        }
+        gameOverText.screenCenter();
         Letter.all.kill();
         isGameOver = true;
         gameOverTimer.reset(GAME_OVER_DELAY);
