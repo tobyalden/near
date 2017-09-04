@@ -25,8 +25,6 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-        new Dictionary('assets/data/dictionary.txt');
-
         line = new FlxSprite(FlxG.width/2, 0);
         line.makeGraphic(1, FlxG.height, FlxColor.WHITE);
         add(line);
@@ -78,11 +76,18 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
         if(isGameOver && !gameOverTimer.active) {
-           gameOverDisplay.revive(); 
-           currentLetterDisplayP1.kill();
-           currentLetterDisplayP2.kill();
-           lastWordDisplayP1.kill();
-           lastWordDisplayP2.kill();
+            gameOverDisplay.revive(); 
+            currentLetterDisplayP1.kill();
+            currentLetterDisplayP2.kill();
+            lastWordDisplayP1.kill();
+            lastWordDisplayP2.kill();
+            var controller = FlxG.gamepads.lastActive;
+            if(controller != null) {
+                if(controller.pressed.START) {
+                    FlxG.switchState(new PlayState()); 
+                    return;
+                }
+            }
         }
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
         FlxG.overlap(player1, Letter.all, null, killPlayer);

@@ -2,12 +2,15 @@ package;
 
 import flixel.*;
 import flixel.input.keyboard.*;
+import flixel.input.gamepad.*;
+import flixel.math.*;
 import flixel.util.*;
 
 class Player extends FlxSprite
 {
     public static inline var SPEED = 270;
     public static inline var SHOT_COOOLDOWN = 0.25;
+    public static inline var DEAD_ZONE = 0.5;
 
     public static var P1_CONTROLS = [
         'up'=>FlxKey.UP,
@@ -27,11 +30,12 @@ class Player extends FlxSprite
         'shoot'=>FlxKey.S
     ];
 
+    public var isPlayerTwo:Bool;
     private var shotCooldown:FlxTimer;
     private var currentLetters:String;
     private var lastWord:String;
-    private var isPlayerTwo:Bool;
     private var controls:Map<String, Int>;
+    private var controller:FlxGamepad;
 
     public function new(x:Int, y:Int, isPlayerTwo:Bool=false)
     {
@@ -51,8 +55,45 @@ class Player extends FlxSprite
         lastWord = '';
     }
 
+    private function checkPressed(name:String) {
+        if(controller == null) {
+            return FlxG.keys.anyPressed([controls[name]]);
+        }
+        else {
+            if(name == 'shoot') {
+                return controller.pressed.A;
+            } 
+            if(name == 'cast') {
+                return controller.pressed.X;
+            } 
+        }
+        return false;
+    }
+
+    private function checkJustPressed(name:String) {
+        if(controller == null) {
+            return FlxG.keys.anyJustPressed([controls[name]]);
+        }
+        else {
+            if(name == 'shoot') {
+                return controller.justPressed.A;
+            } 
+            if(name == 'cast') {
+                return controller.justPressed.X;
+            } 
+        }
+        return false;
+    }
+
     override public function update(elapsed:Float)
     {
+        if(isPlayerTwo) {
+            controller = FlxG.gamepads.getByID(1);
+        }
+        else {
+            controller = FlxG.gamepads.getByID(0);
+        }
+
         movement();
         shooting();
         super.update(elapsed);
@@ -70,7 +111,7 @@ class Player extends FlxSprite
 
     private function shooting()
     {
-        if(FlxG.keys.anyPressed([controls['shoot']]) && !shotCooldown.active)
+        if(checkPressed('shoot') && !shotCooldown.active)
         {
             shotCooldown.reset(SHOT_COOOLDOWN);
             var bullet = new Bullet(
@@ -78,7 +119,7 @@ class Player extends FlxSprite
             );
             FlxG.state.add(bullet);
         }
-        if(FlxG.keys.anyJustPressed([controls['cast']])) {
+        if(checkJustPressed('cast')) {
             castWord();
         }
     }
@@ -108,20 +149,33 @@ class Player extends FlxSprite
 
     private function movement()
     {
-        if(FlxG.keys.anyPressed([controls['up']])) {
+        if(controller != null) {
+            controller.deadZone = DEAD_ZONE;
+            var leftStick = new FlxVector(
+                controller.analog.value.LEFT_STICK_X, 
+                controller.analog.value.LEFT_STICK_Y
+            );
+            leftStick.normalize();
+            leftStick.scale(SPEED);
+            velocity.x = leftStick.x;
+            velocity.y = leftStick.y;
+            return;
+        }
+
+        if(checkPressed('up')) {
             velocity.y = -SPEED;
         }
-        else if(FlxG.keys.anyPressed([controls['down']])) {
+        else if(checkPressed('down')) {
             velocity.y = SPEED;
         }
         else {
             velocity.y = 0;
         }
 
-        if(FlxG.keys.anyPressed([controls['left']])) {
+        if(checkPressed('left')) {
             velocity.x = -SPEED;
         }
-        else if(FlxG.keys.anyPressed([controls['right']])) {
+        else if(checkPressed('right')) {
             velocity.x = SPEED;
         }
         else {
