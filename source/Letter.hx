@@ -92,7 +92,14 @@ class Letter extends FlxSprite
 
     override public function destroy()
     {
+        FlxG.state.add(new Explosion(this));
         all.remove(this);
         super.destroy();
+    }
+
+    override public function kill()
+    {
+        FlxG.state.add(new Explosion(this));
+        super.kill();
     }
 }

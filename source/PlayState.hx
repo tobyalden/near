@@ -1,12 +1,14 @@
 package;
 
 import flixel.*;
+import flixel.group.*;
 import flixel.text.*;
 import flixel.util.*;
 
 class PlayState extends FlxState
 {
     public static inline var SPAWN_COOLDOWN = 1;
+    public static inline var GAME_OVER_DELAY = 2;
 
     private var player1:Player;
     private var player2:Player;
@@ -16,6 +18,9 @@ class PlayState extends FlxState
     private var currentLetterDisplayP2:FlxText;
     private var lastWordDisplayP2:FlxText;
     private var spawnCooldown:FlxTimer;
+    private var isGameOver:Bool;
+    private var gameOverTimer:FlxTimer;
+    private var gameOverDisplay:FlxGroup;
 
 	override public function create():Void
 	{
@@ -27,6 +32,17 @@ class PlayState extends FlxState
 
         spawnCooldown = new FlxTimer();
         spawnCooldown.loops = 1;
+
+        gameOverDisplay = new FlxGroup();
+        var gameOverText = new FlxText(0, 0, 0, 'GAME OVER', 64);
+        gameOverText.screenCenter();
+        var restartText = new FlxText(0, 0, 0, 'PRESS START FOR REMATCH', 16);
+        restartText.screenCenter();
+        restartText.y += gameOverText.height;
+        gameOverDisplay.add(gameOverText);
+        gameOverDisplay.add(restartText);
+        gameOverDisplay.kill();
+        add(gameOverDisplay);
 
         currentLetterDisplayP1 = new FlxText();
         currentLetterDisplayP1.size = 64;
@@ -51,11 +67,22 @@ class PlayState extends FlxState
         add(player1);
         add(player2);
 
+        isGameOver = false;
+        gameOverTimer = new FlxTimer();
+        gameOverTimer.loops = 1;
+
 		super.create();
 	}
 
 	override public function update(elapsed:Float)
 	{
+        if(isGameOver && !gameOverTimer.active) {
+           gameOverDisplay.revive(); 
+           currentLetterDisplayP1.kill();
+           currentLetterDisplayP2.kill();
+           lastWordDisplayP1.kill();
+           lastWordDisplayP2.kill();
+        }
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
         FlxG.overlap(player1, Letter.all, null, killPlayer);
         FlxG.overlap(player2, Letter.all,  null, killPlayer);
@@ -82,7 +109,7 @@ class PlayState extends FlxState
             lastWordDisplayP2.color = FlxColor.RED;
         }
 
-        if(!spawnCooldown.active) {
+        if(!spawnCooldown.active && !isGameOver) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
             var randX = Math.round((FlxG.width/2 - 35) * Math.random());
             var letter = new Letter(
@@ -102,9 +129,11 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 
-    private function killPlayer(player:FlxObject, letter:FlxObject) {
-        add(new Explosion(player));
+    private function killPlayer(player:FlxObject, _:FlxObject) {
         player.kill();
+        Letter.all.kill();
+        isGameOver = true;
+        gameOverTimer.reset(GAME_OVER_DELAY);
         return true;
     }
 
