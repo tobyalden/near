@@ -54,9 +54,11 @@ class PlayState extends FlxState
 		super.create();
 	}
 
-	override public function update(elapsed:Float):Void
+	override public function update(elapsed:Float)
 	{
         FlxG.overlap(Bullet.all, Letter.all, null, destroyBoth);
+        FlxG.overlap(player1, Letter.all, null, killPlayer);
+        FlxG.overlap(player2, Letter.all,  null, killPlayer);
 
         currentLetterDisplayP1.text = player1.getCurrentLetters();
         currentLetterDisplayP2.text = player2.getCurrentLetters();
@@ -80,7 +82,6 @@ class PlayState extends FlxState
             lastWordDisplayP2.color = FlxColor.RED;
         }
 
-        // TODO: Spawn different letters on the different sides of the screen
         if(!spawnCooldown.active) {
             spawnCooldown.reset(SPAWN_COOLDOWN);
             var randX = Math.round((FlxG.width/2 - 35) * Math.random());
@@ -101,15 +102,21 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 
+    private function killPlayer(player:FlxObject, letter:FlxObject) {
+        add(new Explosion(player));
+        player.kill();
+        return true;
+    }
+
     private function destroyBoth(sprite1:FlxObject, sprite2:FlxObject)
     {
         var letter:Letter = null;
         var bullet:Bullet = null;
-        if(isLetter(sprite1)) {
+        if(isClass(sprite1, Letter) && isClass(sprite2, Bullet)) {
             letter = cast(sprite1, Letter);
             bullet = cast(sprite2, Bullet);
         }
-        else if(isLetter(sprite2)) {
+        else if(isClass(sprite2, Letter) && isClass(sprite1, Bullet)) {
             letter = cast(sprite2, Letter);
             bullet = cast(sprite1, Bullet);
         }
@@ -126,10 +133,11 @@ class PlayState extends FlxState
         return true;
     }
 
-    private function isLetter(sprite:FlxObject) {
+    private function isClass(sprite:FlxObject, cls:Class<FlxSprite>) {
         return (
             Type.getClassName(Type.getClass(sprite))
-            == Type.getClassName(Letter)
+            == Type.getClassName(cls)
         );
    }
+
 }
