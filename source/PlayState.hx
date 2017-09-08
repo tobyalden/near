@@ -61,8 +61,8 @@ class PlayState extends FlxState
         lastWordDisplayP2.size = 64;
         add(lastWordDisplayP2);
 
-        player1 = new Player(20, 20);
-        player2 = new Player(100, 100, true);
+        player1 = new Player(0, FlxG.height - 16);
+        player2 = new Player(FlxG.width - 16, FlxG.height - 16, true);
         add(player1);
         add(player2);
 
