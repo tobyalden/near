@@ -145,6 +145,10 @@ class Player extends FlxSprite
     public function castWord() {
         var isWord = Dictionary.dictionary.isWord(currentLetters);
         var count = 0;
+        lastWord = currentLetters;
+        if (!isWord) {
+            currentLetters += (Letter.getRandomWeighted());
+        }
         for (letter in currentLetters.split('')) {
             var randX = Std.int(Math.random() * (FlxG.width/2 - 34));
             if (!isPlayerTwo && isWord || isPlayerTwo && !isWord) {
@@ -154,7 +158,6 @@ class Player extends FlxSprite
             FlxG.state.add(trash);
             count++;
         }
-        lastWord = currentLetters;
         currentLetters = '';
     }
 
