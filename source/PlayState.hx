@@ -79,6 +79,8 @@ class PlayState extends FlxState
         matchTimer.loops = 0;
         matchTimer.start(9999);
 
+        FlxG.sound.play("assets/sounds/matchstart.wav");
+
 		super.create();
 	}
 
@@ -161,6 +163,7 @@ class PlayState extends FlxState
         Letter.all.kill();
         isGameOver = true;
         gameOverTimer.reset(GAME_OVER_DELAY);
+        FlxG.sound.play("assets/sounds/playerhit.wav");
         return true;
     }
 
@@ -191,6 +194,7 @@ class PlayState extends FlxState
             else {
                 player1.addLetter(letter.toString());
             } 
+            FlxG.sound.play("assets/sounds/hitletter.wav");
         }
         sprite1.destroy();
         sprite2.destroy();

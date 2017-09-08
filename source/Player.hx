@@ -124,6 +124,7 @@ class Player extends FlxSprite
                 Std.int(x + 8), Std.int(y + 8), isPlayerTwo
             );
             FlxG.state.add(bullet);
+            FlxG.sound.play("assets/sounds/shoot.wav");
         }
         if(checkJustPressed('cast')) {
             castWord();
@@ -148,6 +149,10 @@ class Player extends FlxSprite
         lastWord = currentLetters;
         if (!isWord) {
             currentLetters += (Letter.getRandomWeighted());
+            FlxG.sound.play("assets/sounds/misspell.wav");
+        }
+        else {
+            FlxG.sound.play("assets/sounds/spell.wav");
         }
         for (letter in currentLetters.split('')) {
             var randX = Std.int(Math.random() * (FlxG.width/2 - 34));
