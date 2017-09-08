@@ -138,21 +138,16 @@ class Player extends FlxSprite
     }
 
     public function castWord() {
-        if(Dictionary.dictionary.isWord(currentLetters)) {
-            trace('spelled "' + currentLetters + '"!');
-            var count = 0;
-            for (letter in currentLetters.split('')) {
-                var randX = Std.int(Math.random() * (FlxG.width/2 - 34));
-                if (!isPlayerTwo) {
-                    randX += Std.int(FlxG.width/2);
-                }
-                var trash = new TrashLetter(randX, -50 - count * 50, letter);
-                FlxG.state.add(trash);
-                count++;
+        var isWord = Dictionary.dictionary.isWord(currentLetters);
+        var count = 0;
+        for (letter in currentLetters.split('')) {
+            var randX = Std.int(Math.random() * (FlxG.width/2 - 34));
+            if (!isPlayerTwo && isWord || isPlayerTwo && !isWord) {
+                randX += Std.int(FlxG.width/2);
             }
-        }
-        else {
-            trace('bzzzt!');
+            var trash = new TrashLetter(randX, -50 - count * 50, letter);
+            FlxG.state.add(trash);
+            count++;
         }
         lastWord = currentLetters;
         currentLetters = '';

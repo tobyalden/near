@@ -155,11 +155,19 @@ class PlayState extends FlxState
     {
         var letter:Letter = null;
         var bullet:Bullet = null;
-        if(isClass(sprite1, Letter) && isClass(sprite2, Bullet)) {
+        if((isClass(sprite1, Letter)) && isClass(sprite2, Bullet)) {
             letter = cast(sprite1, Letter);
             bullet = cast(sprite2, Bullet);
         }
         else if(isClass(sprite2, Letter) && isClass(sprite1, Bullet)) {
+            letter = cast(sprite2, Letter);
+            bullet = cast(sprite1, Bullet);
+        }
+        else if(isClass(sprite1, TrashLetter) && isClass(sprite2, Bullet)) {
+            letter = cast(sprite1, Letter);
+            bullet = cast(sprite2, Bullet);
+        }
+        else if(isClass(sprite2, TrashLetter) && isClass(sprite1, Bullet)) {
             letter = cast(sprite2, Letter);
             bullet = cast(sprite1, Bullet);
         }
