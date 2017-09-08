@@ -144,6 +144,9 @@ class Player extends FlxSprite
     }
 
     public function castWord() {
+        if (currentLetters.length == 0) {
+            return;
+        }
         var isWord = Dictionary.dictionary.isWord(currentLetters);
         var count = 0;
         lastWord = currentLetters;
