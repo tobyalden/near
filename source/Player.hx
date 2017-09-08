@@ -9,7 +9,7 @@ import flixel.util.*;
 class Player extends FlxSprite
 {
     //public static inline var SPEED = 270;
-    public static inline var SPEED = 270/2;
+    public static inline var BASE_SPEED = 270;
     public static inline var SHOT_COOOLDOWN = 0.25;
     public static inline var DEAD_ZONE = 0.5;
 
@@ -37,6 +37,7 @@ class Player extends FlxSprite
     private var lastWord:String;
     private var controls:Map<String, Int>;
     private var controller:FlxGamepad;
+    private var speed:Float;
 
     public function new(x:Int, y:Int, isPlayerTwo:Bool=false)
     {
@@ -88,6 +89,10 @@ class Player extends FlxSprite
 
     override public function update(elapsed:Float)
     {
+        speed = BASE_SPEED / Math.max(
+            PlayState.SPAWN_COOLDOWN - PlayState.matchTimer.elapsedTime / 150,
+            PlayState.MIN_SPAWN_COOLDOWN
+        );
         if(isPlayerTwo) {
             controller = FlxG.gamepads.getByID(1);
         }
@@ -162,27 +167,27 @@ class Player extends FlxSprite
                 controller.analog.value.LEFT_STICK_Y
             );
             leftStick.normalize();
-            leftStick.scale(SPEED);
+            leftStick.scale(speed);
             velocity.x = leftStick.x;
             velocity.y = leftStick.y;
             return;
         }
 
         if(checkPressed('up')) {
-            velocity.y = -SPEED;
+            velocity.y = -speed;
         }
         else if(checkPressed('down')) {
-            velocity.y = SPEED;
+            velocity.y = speed;
         }
         else {
             velocity.y = 0;
         }
 
         if(checkPressed('left')) {
-            velocity.x = -SPEED;
+            velocity.x = -speed;
         }
         else if(checkPressed('right')) {
-            velocity.x = SPEED;
+            velocity.x = speed;
         }
         else {
             velocity.x = 0;

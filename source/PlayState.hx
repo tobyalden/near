@@ -7,8 +7,11 @@ import flixel.util.*;
 
 class PlayState extends FlxState
 {
-    public static inline var SPAWN_COOLDOWN = 1;
+    public static inline var SPAWN_COOLDOWN = 2;
+    public static inline var MIN_SPAWN_COOLDOWN = 0.5;
     public static inline var GAME_OVER_DELAY = 2;
+
+    public static var matchTimer:FlxTimer;
 
     private var player1:Player;
     private var player2:Player;
@@ -18,10 +21,12 @@ class PlayState extends FlxState
     private var currentLetterDisplayP2:FlxText;
     private var lastWordDisplayP2:FlxText;
     private var spawnCooldown:FlxTimer;
+    private var spawnCooldownTime:Float;
     private var isGameOver:Bool;
     private var gameOverTimer:FlxTimer;
     private var gameOverText:FlxText;
     private var gameOverDisplay:FlxGroup;
+
 
 	override public function create():Void
 	{
@@ -70,6 +75,10 @@ class PlayState extends FlxState
         gameOverTimer = new FlxTimer();
         gameOverTimer.loops = 1;
 
+        matchTimer = new FlxTimer();
+        matchTimer.loops = 0;
+        matchTimer.start(9999);
+
 		super.create();
 	}
 
@@ -116,7 +125,11 @@ class PlayState extends FlxState
         }
 
         if(!spawnCooldown.active && !isGameOver) {
-            spawnCooldown.reset(SPAWN_COOLDOWN);
+            var spawnCooldownTime = Math.max(
+                SPAWN_COOLDOWN - matchTimer.elapsedTime / 150,
+                MIN_SPAWN_COOLDOWN
+            );
+            spawnCooldown.reset(spawnCooldownTime);
             var randX = Math.round((FlxG.width/2 - 35) * Math.random());
             var letter = new Letter(
                 randX, -50,
